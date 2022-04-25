@@ -5,8 +5,7 @@ const mongoose = require("mongoose");
 const app = express();
 
 app.use(express.json({ extended: true }));
-app.use('/api/email', require("./routes/email.routes"))
-
+app.use("/api/email", require("./routes/email.routes"));
 
 const PORT = config.PORT || 5000;
 

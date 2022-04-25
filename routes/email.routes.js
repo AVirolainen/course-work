@@ -1,46 +1,49 @@
 const { Router } = require("express");
 const nodemailer = require("nodemailer");
-const hbs = require('nodemailer-express-handlebars')
+const hbs = require("nodemailer-express-handlebars");
 const config = require("../config/config");
-const path = require('path')
+const path = require("path");
 
 const router = Router();
 
 router.get("/getInfo", async (req, res) => {
     try {
-        const transporter = nodemailer.createTransport({
+        let transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: config.EMAIL,
-                pass: config.EMAIL_PASSWORD,
+                user: config.EMAIL || "abc@gmail.com",
+                pass: config.EMAIL_PASSWORD || "1234",
             },
+            secure: false,
         });
 
         const handlebarOptions = {
             viewEngine: {
-                partialsDir: path.resolve('./email-template/'),
+                extName: ".handlebars",
+                partialsDir: path.resolve(__dirname, "views"),
                 defaultLayout: false,
             },
-            viewPath: path.resolve('./email-template/'),
+            viewPath: path.resolve(__dirname, "views"),
+            extName: ".handlebars",
         };
 
-        transporter.use('compile', hbs(handlebarOptions))
+        transporter.use("compile", hbs(handlebarOptions));
 
-        const mailOptions = {
+        let mailOptions = {
             from: config.EMAIL,
             to: "stasrudenko@ukr.net",
-            subject: "Sending Email using Node.js",
-            template: 'email',
+            subject: "Nodemailer - Test",
+            text: "Wooohooo it works!!",
+            template: "index",
         };
 
-        transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                res.json({ message: error });
-                console.log(error)
-            } else {
-                res.json({ message: "Successfully delivered" });
+        transporter.sendMail(mailOptions, (err, data) => {
+            if (err) {
+                return console.log(err);
             }
+            return console.log("Email sent!!!");
         });
+        res.json({ message: "Done" });
     } catch (e) {
         res.status(500).json({ message: "Something is wrong" });
     }

@@ -53,9 +53,9 @@ function parseFoxtrotData(amount, blank, html) {
     return items;
 }
 
-// const foxtrotData = axios(foxtrotUrl).then((responce) => {
-//     const html = responce.data;
-//     const $ = cheerio.load(html);
+const foxtrotData = axios(foxtrotUrl).then((responce) => {
+    const html = responce.data;
+    const $ = cheerio.load(html);
 
-//     console.log(parseFoxtrotData(5, $, html));
-// });
+    console.log(parseFoxtrotData(5, $, html));
+});
